@@ -130,13 +130,32 @@ export const obtenerChats = async (idUsuario: string) => {
     ]).toArray();
 
     if (ultimosMensajes.length) {
-      ultimosMensajes.forEach(chat => { mapaUltimosMessage.set(chat.chat_id, moment(chat.createdAt).format("HH:mm")) });
+      ultimosMensajes.forEach(chat => { 
+        //mapaUltimosMessage.set(chat.chat_id, moment(chat.createdAt).format("HH:mm")) 
+         mapaUltimosMessage.set(chat.chat_id,chat.createdAt) 
+
+      });
+
     }
 
   }
 
+  //const chatsWithLastMessageDate = chatsWithUsers.map(item => ({ ...item, last_message_date: mapaUltimosMessage.get(String(item._id)) || null }))
 
-  const chatsWithLastMessageDate = chatsWithUsers.map(item => ({ ...item, last_message_date: mapaUltimosMessage.get(String(item._id)) || null }))
+  const chatsWithLastMessageDate = chatsWithUsers.map((item) => {
+    const lastDate = mapaUltimosMessage.get(String(item._id)) || null;
+    return {
+      ...item,
+      last_message_date: lastDate,
+      last_message_date_formated: lastDate && moment(lastDate).format("HH:mm"),
+    };
+  })
+    .sort((a, b) =>
+    b.last_message_date && a.last_message_date
+      ? moment(b.last_message_date).diff(moment(a.last_message_date))
+      : b.last_message_date ? -1 : a.last_message_date ? 1 : 0
+  );;
+
 
   //return ultimosMensajes
 

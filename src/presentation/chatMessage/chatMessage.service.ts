@@ -49,10 +49,11 @@ export const CrearMensaje = async (body: bodyCrearMensajeChat) => {
   if (mensajeGuardado) {
     io.sockets
       .in(body.chat_id)
-      .emit("message", { ...mensajeGuardado, user: userFound });
+      .emit("message", { ...mensajeGuardado, user: userFound, createdAtFormated: mensajeGuardado.createdAt && moment(mensajeGuardado.createdAt).format('HH:mm'), 
+ });
     io.sockets
       .in(`${body.chat_id}_notify`)
-      .emit("message_notify", { ...mensajeGuardado, user: userFound });
+      .emit("message_notify", { ...mensajeGuardado, user: userFound, createdAtFormated: mensajeGuardado.createdAt && moment(mensajeGuardado.createdAt).format('HH:mm') });
   }
 
   return {
@@ -171,8 +172,9 @@ export const getUltimoMessage = async (chat_id: string) => {
 
   const lastMessage = {
     ...messages[0],
-    createdAt: messages[0]?.createdAt ? moment(messages[0]?.createdAt).format('HH:mm') : null,
-    user: userFound || null,
+    createdAt: messages[0]?.createdAt,
+    createdAtFormated: messages[0]?.createdAt && moment(messages[0]?.createdAt).format('HH:mm'), 
+    user: userFound || null, 
   };
 
   //const total = messages.length
