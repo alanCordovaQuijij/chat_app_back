@@ -52,9 +52,9 @@ export const getUser = async (idUsuario: string) => {
     throw boom.notFound("Usuario no encontrado");
   }
 
-  const { _id, email, avatar } = userFound;
+  const { _id, email, avatar, firstname, lastname } = userFound;
 
-  return { _id, email, avatar };
+  return { _id, email, avatar, firstname, lastname };
 };
 
 export const UpdateMe = async (body) => {

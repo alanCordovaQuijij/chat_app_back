@@ -27,7 +27,7 @@ export class UsuariosRoutes {
       }
     );
 
-    router.get(
+        router.get(
       "/",
       asureAuth,
       async (req: RequestUsuario, res: Response, next: NextFunction) => {
@@ -42,6 +42,20 @@ export class UsuariosRoutes {
       }
     );
 
+    router.get(
+      "/:userId",
+      asureAuth,
+      async (req: RequestUsuario, res: Response, next: NextFunction) => {
+        try {
+          const { userId } = req.params;
+
+          const resp = await getUser(userId);
+          res.json(resp);
+        } catch (error) {
+          manejarError(res, next, error);
+        }
+      }
+    );
 
 
     const storage = multer.diskStorage({
